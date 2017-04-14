@@ -52,47 +52,47 @@ public class Restaurant {
     private String url;
     
     public Restaurant(JSONObject object) {
-      	 try {
-      		 if (object != null) {
-   			this.businessId = object.getString("id");
-   			JSONArray jsonArray = (JSONArray) object.get("categories");
-   			List<String> list = new ArrayList<>();
-   			for (int i = 0; i < jsonArray.length(); i++) {
-   				JSONObject subObejct = jsonArray.getJSONObject(i);
-   				list.add(subObejct.getString("title"));
-   			}
-   			this.categories = String.join(",", list);
-   			this.name = object.getString("name");
-   			this.imageUrl = object.getString("image_url");
-   			this.stars = object.getDouble("rating");
-   			JSONObject coordinates = (JSONObject) object.get("coordinates");
-   			this.latitude = coordinates.getDouble("latitude");
-   			this.longitude = coordinates.getDouble("longitude");
-   			JSONObject location = (JSONObject) object.get("location");
-   			this.city = location.getString("city");
-   			this.state = location.getString("state");
-   			this.fullAddress = jsonArrayToString((JSONArray) location.get("display_address"));
-   			this.url = object.getString("url");
-      		 }
-      	 } catch (Exception e) {
-      		 e.printStackTrace();
-      	 }
+		try {
+			if (object != null) {
+				this.businessId = object.getString("id");
+				JSONArray jsonArray = (JSONArray) object.get("categories");
+				List<String> list = new ArrayList<>();
+				for (int i = 0; i < jsonArray.length(); i++) {
+					JSONObject subObejct = jsonArray.getJSONObject(i);
+					list.add(subObejct.getString("title"));
+				}
+				this.categories = String.join(",", list);
+				this.name = object.getString("name");
+				this.imageUrl = object.getString("image_url");
+				this.stars = object.getDouble("rating");
+				JSONObject coordinates = (JSONObject) object.get("coordinates");
+				this.latitude = coordinates.getDouble("latitude");
+				this.longitude = coordinates.getDouble("longitude");
+				JSONObject location = (JSONObject) object.get("location");
+				this.city = location.getString("city");
+				this.state = location.getString("state");
+				this.fullAddress = jsonArrayToString((JSONArray) location.get("display_address"));
+				this.url = object.getString("url");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
        }
        // do not automatically generate this constructor
        public Restaurant(String businessId, String name, String categories,
-      		 String city, String state, double stars, String fullAddress,
-      		 double latitude, double longitude, String imageUrl, String url) {
-      	 this.businessId = businessId;
-      	 this.categories = categories;
-      	 this.name = name;
-      	 this.city = city;
-      	 this.state = state;
-      	 this.stars = stars;
-      	 this.fullAddress = fullAddress;
-      	 this.latitude = latitude;
-      	 this.longitude = longitude;
-      	 this.imageUrl = imageUrl;
-      	 this.url = url;
+			String city, String state, double stars, String fullAddress, double latitude, double longitude,
+			String imageUrl, String url) {
+		this.businessId = businessId;
+		this.categories = categories;
+		this.name = name;
+		this.city = city;
+		this.state = state;
+		this.stars = stars;
+		this.fullAddress = fullAddress;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.imageUrl = imageUrl;
+		this.url = url;
        }
        
        public JSONObject toJSONObject() {

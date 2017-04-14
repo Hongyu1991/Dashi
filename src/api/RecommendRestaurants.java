@@ -1,5 +1,4 @@
 package api;
-import java.io.PrintWriter;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -12,20 +11,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import db.DBConnection;
-import db.MySQLDBConnection;
-
 /**
- * Servlet implementation class SearchRestaurants
+ * Servlet implementation class RecommendRestaurants
  */
-@WebServlet("/restaurants")
-public class SearchRestaurants extends HttpServlet {
+@WebServlet("/recommendation")
+public class RecommendRestaurants extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchRestaurants() {
+    public RecommendRestaurants() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,15 +32,21 @@ public class SearchRestaurants extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		JSONArray array = new JSONArray();
-		DBConnection connection = new MySQLDBConnection();
-		if (request.getParameterMap().containsKey("lat") && request.getParameterMap().containsKey("lon")) {
-			// term is null or empty by default
-			String term = request.getParameter("term");
-			// String userId = (String) session.getAttribute("user");
-			String userId = "1111";
-			double lat = Double.parseDouble(request.getParameter("lat"));
-			double lon = Double.parseDouble(request.getParameter("lon"));
-			array = connection.searchRestaurants(userId, lat, lon, term);
+		try {
+			if (request.getParameterMap().containsKey("user_id")) {
+				String userId = request.getParameter("user_id");
+				// return some fake restaurants
+				array.put(new JSONObject()
+						.put("name", "Panda Express")
+						.put("location", "downtown")
+						.put("country", "US"));
+				array.put(new JSONObject()
+						.put("name", "Hong Kong Express")
+						.put("location", "uptown")
+						.put("country", "US"));
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 		RpcParser.writeOutput(response, array);
 	}
