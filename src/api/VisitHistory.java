@@ -14,12 +14,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import db.DBConnection;
+import db.MySQLDBConnection;
+
 /**
  * Servlet implementation class VisitHistory
  */
 @WebServlet("/history")
 public class VisitHistory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final DBConnection connection = new MySQLDBConnection();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -47,20 +51,20 @@ public class VisitHistory extends HttpServlet {
 			if (input.has("user_id") && input.has("visited")) {
 				String userId = (String) input.get("user_id");
 				JSONArray array = (JSONArray) input.get("visited");
-				List<String> visitedRestaurants = new ArrayList<String>();
+				List<String> visitedRestaurants = new ArrayList<>();
 				for (int i = 0; i < array.length(); i++) {
 					String businessId = (String) array.get(i);
 					visitedRestaurants.add(businessId);
 				}
-				RpcParser.writeOutput(response,
-						new JSONObject().put("status", "OK"));
+				connection.setVisitedRestaurants(userId, visitedRestaurants);
+				RpcParser.writeOutput(response, new JSONObject().put("status", "OK"));
 			} else {
-				RpcParser.writeOutput(response,
-						new JSONObject().put("status", "InvalidParameter"));
+				RpcParser.writeOutput(response, new JSONObject().put("status", "InvalidParameter"));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 }
