@@ -40,22 +40,23 @@ public class VisitHistory extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-            DBConnection connection = new MySQLDBConnection();
-            JSONArray array = null;
-            if (request.getParameterMap().containsKey("user_id")) {
-            	String userId = request.getParameter("user_id");
-            	Set<String> visited_business_id = connection.getVisitedRestaurants(userId);
-            	array = new JSONArray();
-            	for (String id : visited_business_id) {
-            		array.put(connection.getRestaurantsById(id, true));
-            	}
-            	RpcParser.writeOutput(response, array);
-            } else {
-            	RpcParser.writeOutput(response, new JSONObject().put("status", "InvalidParameter"));
-            }
+			DBConnection connection = new MySQLDBConnection();
+			JSONArray array = null;
+			if (request.getParameterMap().containsKey("user_id")) {
+				String userId = request.getParameter("user_id");
+				Set<String> visited_business_id = connection.getVisitedRestaurants(userId);
+				array = new JSONArray();
+				for (String id : visited_business_id) {
+					array.put(connection.getRestaurantsById(id, true));
+				}
+				RpcParser.writeOutput(response, array);
+			} else {
+				RpcParser.writeOutput(response, new JSONObject().put("status", "InvalidParameter"));
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
