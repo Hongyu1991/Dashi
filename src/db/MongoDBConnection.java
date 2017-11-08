@@ -18,6 +18,7 @@ import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -168,7 +169,33 @@ public class MongoDBConnection implements DBConnection {
 						options);
 				list.add(obj);
 			}
-			return new JSONArray(list);
+			
+			if (term == null || term.isEmpty()) {
+				return new JSONArray(list);
+			} else {
+				// Use text search to perform better efficiency
+				return filterRestaurants(term);
+			}
+			
+			//return new JSONArray(list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+
+	private JSONArray filterRestaurants(String term) {
+		try {
+			Set<JSONObject> set = new HashSet<JSONObject>();
+			FindIterable<Document> iterable = db.getCollection("restaurants").find(Filters.text(term));
+
+			iterable.forEach(new Block<Document>() {
+				@Override
+				public void apply(final Document document) {
+					set.add(getRestaurantsById(document.getString("business_id"), false));
+				}
+			});
+			return new JSONArray(set);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -209,12 +236,20 @@ public class MongoDBConnection implements DBConnection {
 	@Override
 	public Boolean verifyLogin(String userId, String password) {
 		// TODO Auto-generated method stub
-		return null;
+	   	 FindIterable<Document> iterable = db.getCollection("users").find(
+	   			 new Document("user_id", userId));
+	   	 Document document = iterable.first();
+	   	 return document.getString("password").equals(password);
 	}
 
 	@Override
 	public String getFirstLastName(String userId) {
 		// TODO Auto-generated method stub
-		return null;
+	   	 FindIterable<Document> iterable = db.getCollection("users").find(
+	   			 new Document("user_id", userId));
+	   	 Document document = iterable.first();
+	   	 String firstName = document.getString("first_name");
+	   	 String lastName = document.getString("last_name");
+	   	 return firstName + " " + lastName;
 	}
 }

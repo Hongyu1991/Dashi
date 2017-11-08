@@ -18,12 +18,12 @@ function init() {
   $('fav-btn').addEventListener('click', loadFavoriteRestaurants);
   $('recommend-btn').addEventListener('click', loadRecommendedRestaurants);
   
-  // validateSession();
+  validateSession();
   
-  onSessionValid({
-	  user_id: '1111',
-	  name: 'John Smith'
-  });
+//  onSessionValid({
+//	  user_id: '1111',
+//	  name: 'John Smith'
+//  });
 }
 
 /**
@@ -477,11 +477,14 @@ function addRestaurant(restaurantList, restaurant) {
   
   // stars
   var stars = $('div', {className: 'stars'});
-  for (var i = 0; i < restaurant.stars; i++) {
-    var star = $('i', {className: 'fa fa-star'});
-    stars.appendChild(star);
-  }
+//  for (var i = 0; i < restaurant.stars; i++) {
+//    var star = $('i', {className: 'fa fa-star'});
+//    stars.appendChild(star);
+//  }
 
+  for (var i = 0; i < parseInt(restaurant.stars); i++) {     var star = $('i', {className: 'fa fa-star'});     stars.appendChild(star);   }
+  
+  
   if (('' + restaurant.stars).match(/\.5$/)) {
     stars.appendChild($('i', {className: 'fa fa-star-half-o'}));
   }
